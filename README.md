@@ -7,7 +7,7 @@ host:
 sudo apt-get install docker
 sudo apt-get install apt-cacher-ng
 git clone git@github.com:timlinux/docker-projects.git
-cd docker-projects/geogit
+cd docker-projects/geogig
 ```
 
 Edit ``71-apt-cacher-ng`` to use your host's ip address.
@@ -23,15 +23,22 @@ maven build grabs a lot of jars.
 After it is installed run a container:
 
 ```bash
-sudo docker run --name="geogit" -p 38080:8080 -d -t kartoza/geogit /start.sh
+sudo docker run --name="geogig-one" -p 38080:8080 -i -t kartoza/geogig
 ```
 
+To check whether geogig is running in the container 
 
-Then from your local machine you should be able to clone the GeoGitRepo
+```bash
+docker run  -p 80 -t -i kartoza/geogig
+
+docker logs kartoza/geogig
+```
+
+Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:
 
 ```
-geogit clone http://localhost:38080/GeoGitRepo/ gisdata-repo-clone
+geogig clone http://localhost:38082/GeoGigRepo/ gisdata-repo-clone
 ```
 
 

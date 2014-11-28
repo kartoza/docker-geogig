@@ -1,1 +1,3 @@
-docker build -t kartoza/geogit:1.0 .
+#bin/bash
+#git clone http://github.com/boundlessgeo/GeoGig.git
+docker build -t kartoza/geogig .
