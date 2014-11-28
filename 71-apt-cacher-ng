@@ -1,1 +1,1 @@
-Acquire::http { Proxy "http://192.168.120.73:3142"; };
+Acquire::http { Proxy "http://192.168.10.200:3142"; };

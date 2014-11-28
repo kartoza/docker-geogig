@@ -3,7 +3,7 @@ MAINTAINER admire@afrispatial.co.za
 
 
 ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
-RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
+
 RUN apt-get -y update
 RUN apt-get -y install  default-jdk
 RUN apt-get  install -y  supervisor

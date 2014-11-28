@@ -23,7 +23,7 @@ maven build grabs a lot of jars.
 After it is installed run a container:
 
 ```bash
-sudo docker run --name="geogig-one" -p 38080:8080 -i -t kartoza/geogig
+sudo docker run --name="geogig" -p 38080:8080 -i -d -t kartoza/geogig
 ```
 
 To check whether geogig is running in the container 
@@ -38,7 +38,7 @@ Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:
 
 ```
-geogig clone http://localhost:38082/GeoGigRepo/ gisdata-repo-clone
+geogig clone http://localhost:38082/GeoGig/src/parent/GeoGigRepo/ gisdata-repo-clone
 ```
 
 
