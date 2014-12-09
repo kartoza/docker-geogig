@@ -25,13 +25,11 @@ RUN echo "geogig serve /GeoGigRepo" >>exec.sh
 
 RUN chmod 0755 exec.sh
 
-RUN /bin/sh exec.sh 
+RUN /bin/sh exec.sh &
 
 
 RUN sleep 5
 RUN geogig --help 
 EXPOSE 8182
 
-
-#CMD ["/sbin/init.d"]
 
