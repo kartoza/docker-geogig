@@ -15,11 +15,14 @@ RUN apt-get install -y maven git
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
 RUN /setup.sh
-
 ENV PATH /GeoGig/src/cli-app/target/geogig/bin:$PATH
 RUN echo "export PATH=/GeoGig/src/cli-app/target/geogig/bin:$PATH" >>/root/.bashrc
 
-RUN geogig --help 
-EXPOSE 8080
-CMD ["/usr/bin/supervisord"]
+RUN echo "#bin/bash">>exec.sh
+RUN echo "geogig serve /GeoGigRepo" >>exec.sh
+
+RUN chmod 0755 exec.sh
+
+RUN /bin/sh exec.sh &
+
 

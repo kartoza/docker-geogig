@@ -8,7 +8,7 @@ mvn clean install -DskipTests
 
 # Make an empty repo
 export PATH=/GeoGig/src/cli-app/target/geogig/bin:$PATH
-
+cd ../../../
 mkdir GeoGigRepo
 cd GeoGigRepo
 geogig init
