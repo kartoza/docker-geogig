@@ -15,8 +15,4 @@ cd GeoGigRepo
 geogig init
 geogig config --global user.name "admire"
 geogig config --global user.email "admire@kartoza.com"
-wget http://geogig.org/docs/_downloads/tutorial_data.zip
-unzip tutorial_data.zip
-geogig shp import snapshot1/parks.shp
-geogig add
-geogig commit -m "initial test commit"
+

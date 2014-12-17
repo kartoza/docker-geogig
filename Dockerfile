@@ -6,13 +6,19 @@ MAINTAINER admire@afrispatial.co.za
 
 RUN apt-get -y update
 RUN apt-get -y install  default-jdk
-RUN apt-get  install -y  supervisor wget unzip
-RUN mkdir -p  /var/log/supervisor
-ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN mkdir -p /var/log/geogig_serve.err.log
-RUN mkdir -p /var/log/geogig_serve.out.log
+RUN apt-get  install -y wget unzip daemontools
+RUN mkdir -p  /etc/service
+RUN mkdir -p  /etc/service/geogig_serve
+WORKDIR /etc/service/geogig_serve
+
+RUN touch run
+RUN echo "#!/bin/bash" >>run
+RUN echo "exec /GeoGig/src/cli-app/target/geogig/bin/geogig serve  /GeoGigRepo" >>run
+RUN chmod 0755 run
+#RUN mv run.sh run
 RUN apt-get install -y maven git
 
+#install geogig
 ADD GeoGig /GeoGig
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
@@ -20,22 +26,11 @@ RUN /setup.sh
 
 ENV PATH /GeoGig/src/cli-app/target/geogig/bin:$PATH
 RUN echo "export PATH=/GeoGig/src/cli-app/target/geogig/bin:$PATH" >>/root/.bashrc
-
-
-#RUN supervisord  
-
-RUN geogig --help 
-EXPOSE 9001
 EXPOSE 8182
+WORKDIR /
+ADD start.sh /start.sh
+RUN chmod 0755 /start.sh
 
-
-
-#VOLUME ["/etc/supervisor/conf.d"]
-
-WORKDIR /etc/supervisor/conf.d
-
-#CMD ["/usr/bin/supervisord", "-c", "/etc/conf.d/supervisor.conf"]
-CMD ["/usr/bin/supervisord"]
-
+CMD ["/start.sh"]
 
 
