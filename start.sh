@@ -1,3 +1,2 @@
 #!/bin/bash
-
-supervisord -n
+/usr/bin/svscan /etc/service
