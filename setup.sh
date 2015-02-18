@@ -1,9 +1,7 @@
 # Once-off tasks to run when setting up the container
 # Tim Sutton, April 24, 2014
 # Install GeoGit
-#cd /
-#git clone http://github.com/boundlessgeo/GeoGig.git
-#cd GeoGig/src/parent
+
 cd /GeoGig/src/parent
 mvn clean install -DskipTests
 
