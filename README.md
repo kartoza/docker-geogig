@@ -11,6 +11,7 @@ sudo docker run --name="geogig" -p 38080:8182 -d kartoza/geogig
 
 If you want to build the image yourself using the Docker recipe then do the following:
 
+
 ```bash
 sudo apt-get install apt-cacher-ng
 git clone git@github.com:kartoza/docker-geogig.git

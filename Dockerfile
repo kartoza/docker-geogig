@@ -18,8 +18,8 @@ RUN mkdir -p  /etc/service
 RUN mkdir -p  /etc/service/geogig_serve
 WORKDIR /etc/service/geogig_serve
 
-RUN touch  run
-RUN echo "#!/bin/bash" >>run
+
+RUN echo "#!/bin/bash" >run
 RUN echo "exec /GeoGig/src/cli-app/target/geogig/bin/geogig serve  /GeoGigRepo" >>run
 RUN chmod 0755 run
 

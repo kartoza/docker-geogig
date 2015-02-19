@@ -1,6 +1,6 @@
 # Once-off tasks to run when setting up the container
 # Tim Sutton, April 24, 2014
-# Install GeoGit
+# Install GeoGig
 
 cd /GeoGig/src/parent
 mvn clean install -DskipTests
