@@ -1,5 +1,5 @@
 # Once-off tasks to run when setting up the container
-# Tim Sutton, April 24, 2014
+# Tim Sutton, February 21, 2015
 # Install GeoGig
 
 cd /GeoGig/src/parent
@@ -11,6 +11,5 @@ cd ../../../
 mkdir GeoGigRepo
 cd GeoGigRepo
 geogig init
-geogig config --global user.name "admire"
-geogig config --global user.email "admire@kartoza.com"
+
 
