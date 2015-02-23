@@ -1,47 +1,43 @@
-#--------- Generic stuff all our Dockerfiles should start with so we get caching ------------
-FROM ubuntu:trusty
-MAINTAINER Tim Sutton<tim@linfiniti.com>
+FROM ubuntu:14.04
+MAINTAINER admire@kartoza.com
 
-RUN  export DEBIAN_FRONTEND=noninteractive
-ENV  DEBIAN_FRONTEND noninteractive
-RUN  dpkg-divert --local --rename --add /sbin/initctl
-#RUN  ln -s /bin/true /sbin/initctl
+RUN export DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND noninteractive
+RUN dpkg-divert --local --rename --add /sbin/initctl
+#RUN ln -s /bin/true /sbin/initctl
 
 # Use local cached debs from host (saves your bandwidth!)
 # Change ip below to that of your apt-cacher-ng host
-ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
+#ADD 71-apt-cacher-ng /etc/apt/apt.conf.d/71-apt-cacher-ng
 
-RUN echo "deb http://archive.ubuntu.com/ubuntu trusty main universe" > /etc/apt/sources.list
-RUN apt-get -y update
-# socat can be used to proxy an external port and make it look like it is local
-RUN apt-get -y install ca-certificates socat openssh-server supervisor
-RUN mkdir /var/run/sshd
-ADD sshd.conf /etc/supervisor/conf.d/sshd.conf
-
-
-RUN echo 'root:geogit' | chpasswd
 #-------------Application Specific Stuff ----------------------------------------------------
+RUN apt-get -y update
+RUN apt-get -y install  default-jdk wget unzip daemontools maven git
+RUN mkdir -p  /etc/service
+RUN mkdir -p  /etc/service/geogig_serve
+WORKDIR /etc/service/geogig_serve
+RUN echo "#!/bin/bash" >run
+RUN echo "exec /GeoGig/src/cli-app/target/geogig/bin/geogig serve  /GeoGigRepo" >>run
+RUN chmod 0755 run
 
-# Next line a workaround for https://github.com/dotcloud/docker/issues/963
-RUN apt-get install -y --no-install-recommends openjdk-7-jdk
-RUN apt-get install -y maven git
-ADD geogit.conf /etc/supervisor/conf.d/geogit.conf
+#install geogig
+WORKDIR /
+RUN if [ ! -f /1.0-beta1.zip ]; then \
+wget https://github.com/boundlessgeo/GeoGig/archive/1.0-beta1.zip; \
+fi; 
 
-
-
-EXPOSE 22
-EXPOSE 8080
-
-# Run any additional tasks here that are too tedious to put in
-# this dockerfile directly.
+RUN unzip 1.0-beta1.zip
+RUN mv GeoGig-1.0-beta1 GeoGig
+RUN rm  1.0-beta1.zip
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
 RUN /setup.sh
 
-# We will run any commands in this when the container starts
+ENV PATH /GeoGig/src/cli-app/target/geogig/bin:$PATH
+RUN echo "export PATH=/GeoGig/src/cli-app/target/geogig/bin:$PATH" >>/root/.bashrc
+EXPOSE 8182
 ADD start.sh /start.sh
 RUN chmod 0755 /start.sh
 
-CMD /start.sh
-
+CMD ["/start.sh"]
 
