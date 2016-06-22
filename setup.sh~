@@ -3,14 +3,14 @@
 # Install GeoGig
 
 #install geogig
-VERSION=1.0-RC2
+VERSION=1.0-beta1
 if [ ! -d /geogig ]
-then
-    wget https://codeload.github.com/locationtech/geogig/zip/${VERSION}
-    unzip ${VERSION}
-    mv geogig-${VERSION} geogig
-    rm -r ${VERSION}
-fi
+then 
+    wget https://github.com/boundlessgeo/GeoGig/archive/${VERSION}.zip
+    unzip ${VERSION}.zip
+    mv GeoGig-${VERSION} geogig
+    rm ${VERSION}.zip
+fi 
 
 cd /geogig/src/parent
 mvn clean install -DskipTests
@@ -30,7 +30,7 @@ echo "export PATH=${GEOGIG_PATH}:$PATH" >>/root/.bashrc
 export PATH=/geogig/src/cli-app/target/geogig/bin:$PATH
 cd /
 if [ ! -d /geogig_repo ]
-then
+then 
     mkdir geogig_repo
 fi
 
