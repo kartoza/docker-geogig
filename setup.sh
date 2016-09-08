@@ -3,12 +3,12 @@
 # Install GeoGig
 
 #install geogig
-VERSION=1.0-RC2
+VERSION=1.0-RC3
 if [ ! -d /geogig ]
 then
     wget https://codeload.github.com/locationtech/geogig/zip/${VERSION}
     unzip ${VERSION}
-    mv geogig-${VERSION} geogig
+    mv geogig-${VERSION} geogig 
     rm -r ${VERSION}
 fi
 

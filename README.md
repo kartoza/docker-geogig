@@ -46,7 +46,7 @@ Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:
 
 ```
-geogig clone http://localhost:38080 gisdata-repo-clone
+geogig clone http://localhost:38080/repos/geogig_repo gisdata-repo-clone
 ```
 
 
