@@ -1,2 +1,2 @@
 #bin/bash
-docker build -t kartoza/geogig .
+docker build -t kartoza/geogig --build-arg VERSION=dev .
