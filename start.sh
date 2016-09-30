@@ -14,7 +14,7 @@ then
 fi
 
 
-geogig config --global user.name "${USER}"
-geogig config --global user.email "${EMAIL_ADDRESS}"
+/geogig/bin/geogig config --global user.name "${USER}"
+/geogig/bin/geogig config --global user.email "${EMAIL_ADDRESS}"
 
 /usr/bin/svscan /etc/service
