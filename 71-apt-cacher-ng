@@ -1,2 +1,0 @@
-#Change IP address to match that of your host
-Acquire::http { Proxy "http://192.168.99.100:3142"; };

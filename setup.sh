@@ -37,4 +37,4 @@ then
 fi
 
 cd geogig_repo
-geogig init
+/geogig/bin/geogig init

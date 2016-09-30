@@ -40,7 +40,7 @@ maven build grabs a lot of jars.
 After it is installed, to run a container substitute your username and email address on the bash command below:
 
 ```bash
-sudo docker docker run -e USER='name' -e EMAIL_ADDRESS='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
+sudo docker run -e USER='name' -e EMAIL_ADDRESS='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
 ```
 Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:
