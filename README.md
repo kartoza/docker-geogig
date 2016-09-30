@@ -18,18 +18,18 @@ If you want to build the image yourself using the Docker recipe then do the foll
 sudo apt-get install apt-cacher-ng
 ```
 
-Edit ``71-apt-cacher-ng`` to use your host's ip address.
-
 ```bash
 git clone git@github.com:kartoza/docker-geogig.git
 cd docker-geogig
 ```
-
-
-
+**VERSION** build arg can be set to `dev` for the lastest
+development build or to a specific version, the default
+value is `-1.0-RC3` and it will build geogig`-1.0-RC3`.
 
 ```bash
-sudo ./build.sh
+# Set $ADDR to your APT_CATCHER_IP
+docker build -t kartoza/geogig --build-arg VERSION=dev --build-arg APT_CATCHER_IP=$ADDR .
+# See ./build.sh for an example run
 ```
 
 
