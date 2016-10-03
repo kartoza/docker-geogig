@@ -12,7 +12,7 @@ ARG APT_CATCHER_IP=localhost
 # if you do not want to use caching
 RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
-ARG VERSION="-1.0-RC3"
+ARG VERSION="1.0-RC3"
 
 #-------------Application Specific Stuff ----------------------------------------------------
 RUN apt-get -y update
