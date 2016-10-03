@@ -12,8 +12,7 @@ then
     else
         wget https://github.com/locationtech/geogig/releases/download/${VERSION}/geogig-${VERSION}.zip
         unzip geogig-${VERSION}.zip
-        mv GeoGig-${VERSION} /geogig
-        rm ${VERSION}.zip
+        rm geogig-${VERSION}.zip
     fi
 fi
 

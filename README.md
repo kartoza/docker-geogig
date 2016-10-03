@@ -24,7 +24,7 @@ cd docker-geogig
 ```
 **VERSION** build arg can be set to `dev` for the lastest
 development build or to a specific version, the default
-value is `-1.0-RC3` and it will build geogig`-1.0-RC3`.
+value is `1.0-RC3` and it will build geogig-`1.0-RC3`.
 
 ```bash
 # Set $ADDR to your APT_CATCHER_IP
