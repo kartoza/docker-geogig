@@ -16,7 +16,8 @@ ARG VERSION="1.0-RC3"
 
 #-------------Application Specific Stuff ----------------------------------------------------
 RUN apt-get -y update
-RUN apt-get -y install default-jdk wget unzip daemontools maven git
+
+RUN apt-get -y install default-jdk wget unzip daemontools
 
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
