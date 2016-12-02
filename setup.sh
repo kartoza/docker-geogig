@@ -16,6 +16,22 @@ then
     fi
 fi
 
+# install plugins
+if [ -d /geogig/lib ]
+then
+    if [ "${BDBPLUGIN}" = "BDB" ]; then
+        wget http://ares.boundlessgeo.com/geogig/dev/geogig-plugins-bdbje-dev-latest.zip
+        unzip -j -d /geogig/lib geogig-plugins-bdbje-dev-latest.zip
+        rm geogig-plugins-bdbje-dev-latest.zip
+    fi
+
+    if [ "${OSMPLUGIN}" = "OSM" ]; then
+        wget http://ares.boundlessgeo.com/geogig/dev/geogig-plugins-osm-dev-latest.zip
+        unzip -j -d /geogig/lib geogig-plugins-osm-dev-latest.zip
+        rm geogig-plugins-osm-dev-latest.zip
+    fi
+fi
+
 # Setup geogig service
 mkdir -p  /etc/service
 mkdir -p  /etc/service/geogig_serve
