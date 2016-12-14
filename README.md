@@ -26,9 +26,9 @@ cd docker-geogig
 development build or to a specific version, the default
 value is `1.0-RC3` and it will build geogig-`1.0-RC3`.
 
-**BDBPLUGIN** build arg to be se set to BDB to install Berkley DB dev geogig plugin
+**BDBPLUGIN** build arg to be set to BDB to install Berkley DB dev geogig plugin
 
-**OSMPLUGIN** build arg to be se set to OSM to install OSM dev geogig plugin
+**OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
 
 
 ```bash
