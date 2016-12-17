@@ -14,6 +14,12 @@ RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/
 
 ARG VERSION="1.0-RC3"
 
+# leave empty to use default plugins or set to "BDB" to install also Berkley DB dev plugin
+ARG BDBPLUGIN=""
+
+# leave empty to use default plugins or set to "OSM" to install also OSM dev plugin
+ARG OSMPLUGIN=""
+
 #-------------Application Specific Stuff ----------------------------------------------------
 RUN apt-get -y update
 

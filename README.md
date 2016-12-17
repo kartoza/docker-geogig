@@ -26,6 +26,11 @@ cd docker-geogig
 development build or to a specific version, the default
 value is `1.0-RC3` and it will build geogig-`1.0-RC3`.
 
+**BDBPLUGIN** build arg to be set to BDB to install Berkley DB dev geogig plugin
+
+**OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
+
+
 ```bash
 # Set $ADDR to your APT_CATCHER_IP
 docker build -t kartoza/geogig --build-arg VERSION=dev --build-arg APT_CATCHER_IP=$ADDR .
