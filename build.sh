@@ -10,4 +10,4 @@ ADDR=`ifconfig wlan1 | grep 'indirizzo inet:' | cut -d: -f2 | awk '{ print $1}'`
 
 VERSION=${VERSION:-dev}
 
-docker build -t kartoza/geogig --build-arg VERSION=$VERSION --build-arg APT_CATCHER_IP=$ADDR .
+docker build -t kartoza/geogig:$VERSION --build-arg VERSION=$VERSION --build-arg APT_CATCHER_IP=$ADDR .

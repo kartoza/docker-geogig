@@ -6,11 +6,11 @@
 if [ ! -d /geogig ]
 then
     if [ "${VERSION}" = "dev" ]; then
-        wget http://ares.boundlessgeo.com/geogig/dev/geogig-dev-latest.zip
-        unzip geogig-dev-latest.zip
-        rm geogig-dev-latest.zip
+        wget http://ares.boundlessgeo.com/geogig/master/geogig-master-latest.zip
+        unzip geogig-master-latest.zip
+        rm geogig-master-latest.zip
     else
-        wget https://github.com/locationtech/geogig/releases/download/${VERSION}/geogig-${VERSION}.zip
+        wget http://download.locationtech.org/geogig/geogig-${VERSION}.zip
         unzip geogig-${VERSION}.zip
         rm geogig-${VERSION}.zip
     fi
