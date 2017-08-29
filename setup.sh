@@ -6,7 +6,7 @@
 if [ ! -d /geogig ]
 then
     if [ "${VERSION}" = "dev" ]; then
-        wget http://ares.boundlessgeo.com/geogig/master/geogig-master-latest.zip
+        wget http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip
         unzip geogig-master-latest.zip
         rm geogig-master-latest.zip
     else
@@ -19,16 +19,17 @@ fi
 # install plugins
 if [ -d /geogig/lib ]
 then
-    if [ "${BDBPLUGIN}" = "BDB" ]; then
-        wget http://ares.boundlessgeo.com/geogig/dev/geogig-plugins-bdbje-dev-latest.zip
-        unzip -j -d /geogig/lib geogig-plugins-bdbje-dev-latest.zip
-        rm geogig-plugins-bdbje-dev-latest.zip
-    fi
-
     if [ "${OSMPLUGIN}" = "OSM" ]; then
-        wget http://ares.boundlessgeo.com/geogig/dev/geogig-plugins-osm-dev-latest.zip
-        unzip -j -d /geogig/lib geogig-plugins-osm-dev-latest.zip
-        rm geogig-plugins-osm-dev-latest.zip
+        # make sure the OSM plugin version matches the GeoGig version
+        if [ "${VERSION}" = "dev" ]; then
+            wget http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip
+            unzip -j -d /geogig/lib geogig-plugins-osm-master-latest.zip
+            rm geogig-plugins-osm-master-latest.zip
+        else
+            wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip
+            unzip -j -d /geogig/lib geogig-plugins-osm-${VERSION}.zip
+            rm geogig-plugins-osm-${VERSION}.zip
+        fi
     fi
 fi
 
