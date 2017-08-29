@@ -16,18 +16,25 @@ then
     fi
 fi
 
+# set the GeoGig plugin/lib directory based on version. For GeoGig 1.1.x it is "lib", for 1.2.x/dev it is "libexec".
+if [ "${VERSION}" = "dev" ]; then
+    GEOGIG_PLUGIN_DIR=/geogig/libexec
+else
+    GEOGIG_PLUGIN_DIR=/geogig/lib
+fi
+
 # install plugins
-if [ -d /geogig/lib ]
+if [ -d ${GEOGIG_PLUGIN_DIR} ]
 then
     if [ "${OSMPLUGIN}" = "OSM" ]; then
         # make sure the OSM plugin version matches the GeoGig version
         if [ "${VERSION}" = "dev" ]; then
             wget http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip
-            unzip -j -d /geogig/lib geogig-plugins-osm-master-latest.zip
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-master-latest.zip
             rm geogig-plugins-osm-master-latest.zip
         else
             wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip
-            unzip -j -d /geogig/lib geogig-plugins-osm-${VERSION}.zip
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-${VERSION}.zip
             rm geogig-plugins-osm-${VERSION}.zip
         fi
     fi
