@@ -1,6 +1,6 @@
 #!/bin/bash
 
-USER=name
+USER_NAME=name
 EMAIL_ADDRESS=name@gmail.com
 
 if [ -n "$1" ]
