@@ -24,12 +24,12 @@ cd docker-geogig
 ```
 **VERSION** build arg can be set to `dev` for the lastest
 development build or to a specific version, the default
-value is `1.0-RC3` and it will build geogig-`1.0-RC3`.
-
-**BDBPLUGIN** build arg to be set to BDB to install Berkley DB dev geogig plugin
+value is `1.1.1` and it will build geogig-`1.1.1`.
 
 **OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
 
+**BDBPLUGIN no longer supported** As of GeoGig release 1.0, the BerkeleyDB backend has been replaced by RocksDB
+(https://github.com/facebook/rocksdb)
 
 ```bash
 # Set $ADDR to your APT_CATCHER_IP
