@@ -18,9 +18,13 @@ ARG VERSION="1.1.1"
 ARG OSMPLUGIN=""
 
 #-------------Application Specific Stuff ----------------------------------------------------
+#ENV EMAIL_ADDRESS="geogig@docker.com"
+#ENV USER_NAME="geogig"
 RUN apt-get -y update
 
 RUN apt-get -y install default-jdk wget unzip daemontools
+
+ADD resources /tmp/resources
 
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
