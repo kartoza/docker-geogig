@@ -41,7 +41,7 @@ fi
 if [ "${BACKEND}" = "FILE" ]; then
     FILE_PATH=/geogig_repo/gis
 else
-    FILE_PATH"postgresql://db/gis/public/?user=docker&password=docker"
+    FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
 fi
 
 # Setup geogig service

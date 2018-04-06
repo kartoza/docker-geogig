@@ -10,7 +10,7 @@ ARG APT_CATCHER_IP=localhost
 # --build-arg APT_CATCHER_IP=xxx.xxx.xxx.xxx,
 # set the IP to that of your apt-cacher-ng host or comment this line out
 # if you do not want to use caching
-RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
+#RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ARG VERSION="1.1.1"
 ARG BACKEND="DATABASE"
