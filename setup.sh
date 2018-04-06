@@ -6,9 +6,9 @@
 if [ ! -f /tmp/resources/geogig-${VERSION}.zip ]
 then
     if [ "${VERSION}" = "dev" ]; then
-        wget http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P ./resources
+        wget http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P /tmp/resources
     else
-        wget http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P ./resources
+        wget http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P /tmp/resources
     fi
 fi
 
