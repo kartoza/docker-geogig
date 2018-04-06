@@ -38,13 +38,19 @@ then
     fi
 fi
 
+if [ "${BACKEND}" = "FILE" ]; then
+    FILE_PATH=/geogig_repo/gis
+else
+    FILE_PATH"postgresql://db/gis/public/?user=docker&password=docker"
+fi
+
 # Setup geogig service
 mkdir -p  /etc/service
 mkdir -p  /etc/service/geogig_serve
 cd /etc/service/geogig_serve
 echo "#!/bin/bash
 # Serve all repos under the specified folder
-exec /geogig/bin/geogig serve -m /geogig_repo" > run
+exec /geogig/bin/geogig serve -m ${FILE_PATH}" > run
 chmod 0755 run
 
 GEOGIG_PATH=/geogig/bin
@@ -57,9 +63,6 @@ if [ ! -d /geogig_repo/gis ]
 then
     mkdir -p geogig_repo/gis
 fi
-
-cd geogig_repo/gis
-/geogig/bin/geogig init
 
 if [ -z "${USER}" ]; then
 	USER=geogig

@@ -13,6 +13,7 @@ ARG APT_CATCHER_IP=localhost
 RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ARG VERSION="1.1.1"
+ARG BACKEND="DATABASE"
 
 # leave empty to use default plugins or set to "OSM" to install also OSM dev plugin
 ARG OSMPLUGIN=""
@@ -21,7 +22,7 @@ ARG OSMPLUGIN=""
 
 RUN apt-get -y update
 
-RUN apt-get -y install default-jdk wget unzip daemontools
+RUN apt-get -y install default-jdk wget unzip daemontools postgresql
 
 ADD resources /tmp/resources
 
