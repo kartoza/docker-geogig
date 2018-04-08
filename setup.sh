@@ -3,6 +3,7 @@
 # Tim Sutton, February 21, 2015
 # Install GeoGig
 #install geogig
+
 if [ ! -f /tmp/resources/geogig-${VERSION}.zip ]
 then
     if [ "${VERSION}" = "dev" ]; then
@@ -38,32 +39,12 @@ then
     fi
 fi
 
-if [ "${BACKEND}" = "FILE" ]; then
-    FILE_PATH=/geogig_repo/gis
-else
-    FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
-fi
-
-# Setup geogig service
 mkdir -p  /etc/service
-mkdir -p  /etc/service/geogig_serve
-cd /etc/service/geogig_serve
-echo "#!/bin/bash
-# Serve all repos under the specified folder
-exec /geogig/bin/geogig serve -m ${FILE_PATH}" > run
-chmod 0755 run
-
+export PATH=/geogig/bin:$PATH
 GEOGIG_PATH=/geogig/bin
 echo "export PATH=${GEOGIG_PATH}:$PATH" >>/root/.bashrc
 
-# Make an empty repo
-export PATH=/geogig/bin:$PATH
-cd /
-if [ ! -d /geogig_repo/gis ]
-then
-    mkdir -p geogig_repo/gis
-fi
-
+# Setup username and geogig configs
 if [ -z "${USER}" ]; then
 	USER=geogig
 fi
@@ -72,5 +53,45 @@ if [ -z "${EMAIL_ADDRESS}" ]; then
 	EMAIL_ADDRESS=geogig@docker.com
 fi
 
-geogig config --global user.name "${USER}"
-geogig config --global user.email "${EMAIL_ADDRESS}"
+if [ "${BACKEND}" = "FILE" ]; then
+    FILE_PATH=/geogig_repo/gis
+    if [ ! -d /geogig_repo/gis ]
+    then
+        mkdir -p geogig_repo/gis
+        cd /geogig_repo/gis
+        /geogig/bin/geogig init
+        /geogig/bin/geogig config --global user.name "${USER}"
+        /geogig/bin/geogig config --global user.email "${EMAIL_ADDRESS}"
+
+    fi
+else
+    FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
+    mkdir -p /etc/service/geogig_config
+    cp /tmp/geogig_postgres_config.sh /etc/service/geogig_config/run
+    sed -i "s/USERNAME/${USER}/g" /etc/service/geogig_config/run
+    sed -i "s/ADDRESS/${EMAIL_ADDRESS}/g" /etc/service/geogig_config/run
+    chmod 0755 /etc/service/geogig_config/run
+fi
+
+# Setup geogig service
+mkdir -p  /etc/service/geogig_serve
+cd /etc/service/geogig_serve
+echo "#!/bin/bash
+# Serve all repos under the specified folder
+
+exec /geogig/bin/geogig serve -m ${FILE_PATH}" > run
+chmod 0755 run
+
+
+
+
+
+
+
+
+
+
+
+
+
+
