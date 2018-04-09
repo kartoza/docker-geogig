@@ -19,19 +19,21 @@ ARG BACKEND="DATABASE"
 ARG OSMPLUGIN=""
 
 #-------------Application Specific Stuff ----------------------------------------------------
-
+ENV EMAIL geogig@docker.com
+ENV USER_NAME  geogig
 RUN apt-get -y update
 
 RUN apt-get -y install default-jdk wget unzip daemontools postgresql
 
 ADD resources /tmp/resources
-ADD geogig_postgres_config.sh /tmp/geogig_postgres_config.sh
+
 
 ADD setup.sh /setup.sh
 RUN chmod 0755 /setup.sh
 RUN /setup.sh
 
 EXPOSE 8182
+EXPOSE 8180
 ADD start.sh /start.sh
 RUN chmod 0755 /start.sh
 

@@ -26,6 +26,10 @@ cd docker-geogig
 development build or to a specific version, the default
 value is `1.1.1` and it will build geogig-`1.1.1`.
 
+**BACKEND** Can be set to FILE or DATABASE.
+FILE Backend uses the rocks-db storage backend
+DATABASE uses the PostgreSQL backend
+
 **OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
 
 **BDBPLUGIN no longer supported** As of GeoGig release 1.0, the BerkeleyDB backend has been replaced by RocksDB
@@ -33,7 +37,7 @@ value is `1.1.1` and it will build geogig-`1.1.1`.
 
 ```bash
 # Set $ADDR to your APT_CATCHER_IP
-docker build -t kartoza/geogig --build-arg VERSION=dev --build-arg APT_CATCHER_IP=$ADDR .
+docker build -t kartoza/geogig --build-arg VERSION=dev --build-arg APT_CATCHER_IP=$ADDR --build-arg BACKEND=FILE .
 # See ./build.sh for an example run
 ```
 
@@ -42,10 +46,18 @@ Its going to take a long time (and consume a chunk of bandwidth) for the build
 because you have any docker base operating system images on your system and the
 maven build grabs a lot of jars.
 
-After it is installed, to run a container substitute your username and email address on the bash command below:
+After it is installed, to run a container using the FILE backend substitute your username and email address on the bash command below:
 
 ```bash
-sudo docker run -e USER='name' -e EMAIL_ADDRESS='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
+docker run -e USER_NAME='name' -e EMAIL='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
+```
+
+To run using a PostgreSQL backend run
+```bash
+# Run the kartoza postgres image. Use postgresql greater > 9.5
+docker run --name "db" -p 25432:5432 -d -t kartoza/postgis:9.5-2.2
+# Link the postgres image to the geogig image.
+docker run -e USER_NAME='name' -e EMAIL='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
 ```
 Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:

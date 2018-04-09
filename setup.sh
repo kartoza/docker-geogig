@@ -46,11 +46,11 @@ echo "export PATH=${GEOGIG_PATH}:$PATH" >>/root/.bashrc
 
 # Setup username and geogig configs
 if [ -z "${USER}" ]; then
-	USER=geogig
+	USER=${USER_NAME}
 fi
 
 if [ -z "${EMAIL_ADDRESS}" ]; then
-	EMAIL_ADDRESS=geogig@docker.com
+	EMAIL_ADDRESS=${EMAIL}
 fi
 
 if [ "${BACKEND}" = "FILE" ]; then
@@ -66,11 +66,9 @@ if [ "${BACKEND}" = "FILE" ]; then
     fi
 else
     FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
-    mkdir -p /etc/service/geogig_config
-    cp /tmp/geogig_postgres_config.sh /etc/service/geogig_config/run
-    sed -i "s/USERNAME/${USER}/g" /etc/service/geogig_config/run
-    sed -i "s/ADDRESS/${EMAIL_ADDRESS}/g" /etc/service/geogig_config/run
-    chmod 0755 /etc/service/geogig_config/run
+    echo $FILE_PATH
+
+
 fi
 
 # Setup geogig service
@@ -79,7 +77,7 @@ cd /etc/service/geogig_serve
 echo "#!/bin/bash
 # Serve all repos under the specified folder
 
-exec /geogig/bin/geogig serve -m ${FILE_PATH}" > run
+exec /geogig/bin/geogig serve -m '${FILE_PATH}' " > run
 chmod 0755 run
 
 
