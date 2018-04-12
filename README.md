@@ -1,6 +1,6 @@
 I assume you have docker installed already (the build file and example below
 refers to docker instead of docker for commands since that is how it is
-packaged in Ubuntu 14.04). So all instructions below are based on 14.04 as the
+packaged in Ubuntu 16.04). So all instructions below are based on 16.04 as the
 host:
 
 Change the username and email address in the bash command to run the container:
@@ -51,7 +51,7 @@ Then from your local machine you should be able to clone the GeoGigRepo
 repository that is created in the docker container:
 
 ```
-geogig clone http://localhost:38080 gisdata-repo-clone
+geogig clone http://localhost:38080/repos/gis gisdata-repo-clone
 ```
 
 
