@@ -5,16 +5,29 @@ services:
     environment:
       - USERNAME=docker
       - PASS=docker
-      - ALLOW_IP_RANGE=0.0.0.0/0
+      - ALLOW_IP_RANGE=0.0.0.0/0USER_NAME
+    ports:
+      - "25432:5432"
   geogig:
-    image: kartoza/geogig:backend
     build:
+      context: .
+      dockerfile: Dockerfile
       args:
         VERSION: 1.2.0
-        BACKEND: DATABASE
+        BACKEND: FILE
     volumes:
       - ./data:/data
     ports:
       - "38080:8182"
+    environment:
+      - GEOGIG_CACHE_MAX_SIZE:0.5
+      - EMAIL:test@geogig.com
+      - USER_NAME:geogig
+      - PGHOST:db
+      - PGPORT:5432
+      - PGDATABASE:gis
+      - PGUSER:docker
+      - PGPASSWORD:docker
+      - PGSCHEMA:public
     depends_on:
       - db
