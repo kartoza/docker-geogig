@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: kartoza/postgis:9.5-2.2
+    environment:
+      - USERNAME=docker
+      - PASS=docker
+      - ALLOW_IP_RANGE=0.0.0.0/0
+  geogig:
+    image: kartoza/geogig:backend
+    build:
+      args:
+        VERSION: 1.2.0
+        BACKEND: DATABASE
+    volumes:
+      - ./data:/data
+    ports:
+      - "38080:8182"
+    depends_on:
+      - db

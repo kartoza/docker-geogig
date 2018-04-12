@@ -62,7 +62,7 @@ if [ "${BACKEND}" = "FILE" ]; then
         /geogig/bin/geogig init
     fi
 else
-    FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
+    FILE_PATH="postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}/${PGSCHEMA}/?user=${PGUSER}&password=${PGPASSWORD}"
 fi
 
 # Setup geogig service

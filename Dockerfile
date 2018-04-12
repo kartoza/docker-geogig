@@ -19,18 +19,20 @@ ARG BACKEND="DATABASE"
 ARG OSMPLUGIN=""
 
 #-------------Application Specific Stuff ----------------------------------------------------
-ENV GEOGIG_OPTS "-Djava.awt.headless=true -server -Xms2G -Xmx4G -Xrs -XX:PerfDataSamplingInterval=500 \
- -Dorg.geotools.referencing.forceXY=true -XX:SoftRefLRUPolicyMSPerMB=36000 -XX:+UseParallelGC -XX:NewRatio=2 \
- -XX:+CMSClassUnloadingEnabled"
-#-XX:+UseConcMarkSweepGC use this rather than parallel GC?
-ENV JAVA_OPTS "$JAVA_OPTS $GEOGIG_OPTS"
+
 ENV GEOGIG_CACHE_MAX_SIZE 0.5
 ENV EMAIL geogig@docker.com
 ENV USER_NAME  geogig
 ENV STORAGE_BACKEND ${BACKEND}
+ENV PGHOST db
+ENV PGPORT 5432
+ENV PGDATABASE gis
+ENV PGUSER docker
+ENV PGPASSWORD docker
+ENV PGSCHEMA public
 RUN apt-get -y update
 
-RUN apt-get -y install default-jdk  daemontools
+RUN apt-get -y install default-jdk  daemontools postgresql
 
 ADD resources /tmp/resources
 
@@ -40,7 +42,6 @@ RUN chmod 0755 /setup.sh
 RUN /setup.sh
 
 EXPOSE 8182
-EXPOSE 8180
 ADD start.sh /start.sh
 RUN chmod 0755 /start.sh
 

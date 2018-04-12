@@ -1,13 +1,29 @@
 #!/bin/bash
 # Configure username and password for database backend
 
+export PGPASSWORD=${PGPASSWORD}
+sql=" select (case when exists (SELECT 1 FROM   information_schema.tables  WHERE  table_schema = 'public' AND    table_name = 'geogig_config') then 0 else 1 end) as exist; "
+conn="-d ${PGDATABASE} -p ${PGPORT} -U ${PGUSER} -h ${PGHOST}"
+output=$(psql ${conn} -t -c "${sql}")
+echo ${output}
+
+
 if [ "${STORAGE_BACKEND}" = "FILE" ]; then
     /geogig/bin/geogig config --global user.name "${USER_NAME}"
     /geogig/bin/geogig config --global user.email "${EMAIL}"
 else
-    /geogig/bin/geogig --repo "postgresql://db/gis/public/gis?user=docker&password=docker" init
-    /geogig/bin/geogig --repo  "postgresql://db/gis/public/gis?user=docker&password=docker" config --global user.name "${USER_NAME}"
-    /geogig/bin/geogig --repo  "postgresql://db/gis/public/gis?user=docker&password=docker" config --global user.email "${EMAIL}"
+    if [ "${output}" -eq '1' ]; then
+
+	    echo 'Geogig tables are non existent and we will initiate them'
+	    /geogig/bin/geogig --repo "postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}/${PGSCHEMA}/gis?user=${PGUSER}&password=${PGPASSWORD}" init
+        /geogig/bin/geogig --repo  "postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}/${PGSCHEMA}/?user=${PGUSER}&password=${PGPASSWORD}" config --global user.name "${USER_NAME}"
+        /geogig/bin/geogig --repo  "postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}/${PGSCHEMA}/?user=${PGUSER}&password=${PGPASSWORD}" config --global user.email "${EMAIL}"
+
+    else
+	    echo 'Database already initiated'
+    fi
+
+
 fi
 /usr/bin/svscan /etc/service
 
