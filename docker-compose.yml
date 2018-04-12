@@ -15,6 +15,7 @@ services:
       args:
         VERSION: 1.2.0
         BACKEND: FILE
+        APT_CATCHER_IP=127.0.0.0
     volumes:
       - ./data:/data
     ports:
