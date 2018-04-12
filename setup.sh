@@ -7,9 +7,9 @@
 if [ ! -f /tmp/resources/geogig-${VERSION}.zip ]
 then
     if [ "${VERSION}" = "dev" ]; then
-        wget http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P /tmp/resources
+        wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P /tmp/resources
     else
-        wget http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P /tmp/resources
+        wget -c http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P /tmp/resources
     fi
 fi
 
@@ -28,12 +28,12 @@ then
     if [ "${OSMPLUGIN}" = "OSM" ]; then
         # make sure the OSM plugin version matches the GeoGig version
         if [ "${VERSION}" = "dev" ]; then
-            wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip
-            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-master-latest.zip
+            wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip -P /tmp/resources
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} -P /tmp/resources/geogig-plugins-osm-master-latest.zip
             rm geogig-plugins-osm-master-latest.zip
         else
-            wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip
-            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-${VERSION}.zip
+            wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip -P /tmp/resources
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} -P /tmp/resources/geogig-plugins-osm-${VERSION}.zip
             rm geogig-plugins-osm-${VERSION}.zip
         fi
     fi
@@ -57,18 +57,12 @@ if [ "${BACKEND}" = "FILE" ]; then
     FILE_PATH=/geogig_repo/gis
     if [ ! -d /geogig_repo/gis ]
     then
-        mkdir -p geogig_repo/gis
+        mkdir -p /geogig_repo/gis
         cd /geogig_repo/gis
         /geogig/bin/geogig init
-        /geogig/bin/geogig config --global user.name "${USER}"
-        /geogig/bin/geogig config --global user.email "${EMAIL_ADDRESS}"
-
     fi
 else
     FILE_PATH="postgresql://db/gis/public/?user=docker&password=docker"
-    echo $FILE_PATH
-
-
 fi
 
 # Setup geogig service
