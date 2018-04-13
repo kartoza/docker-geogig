@@ -10,7 +10,7 @@ ARG APT_CATCHER_IP=localhost
 # --build-arg APT_CATCHER_IP=xxx.xxx.xxx.xxx,
 # set the IP to that of your apt-cacher-ng host or comment this line out
 # if you do not want to use caching
-RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
+#RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
 ARG VERSION="1.1.1"
 ARG BACKEND="DATABASE"
@@ -19,6 +19,9 @@ ARG BACKEND="DATABASE"
 ARG OSMPLUGIN=""
 
 #-------------Application Specific Stuff ----------------------------------------------------
+ENV GEOGIG_OPTS "-Djava.awt.headless=true -server -Xms2G -Xmx4G  "
+#-XX:+UseConcMarkSweepGC use this rather than parallel GC?
+ENV JAVA_OPTS "$JAVA_OPTS $GEOGIG_OPTS"
 
 ENV GEOGIG_CACHE_MAX_SIZE 0.5
 ENV EMAIL geogig@docker.com

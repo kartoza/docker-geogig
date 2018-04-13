@@ -2,33 +2,36 @@ version: '2'
 services:
   db:
     image: kartoza/postgis:9.5-2.2
-    environment:
-      - USERNAME=docker
-      - PASS=docker
-      - ALLOW_IP_RANGE=0.0.0.0/0USER_NAME
     ports:
-      - "25432:5432"
+      - "25435:5432"
+    env_file:
+      - database.env
+
+  geoserver:
+    image: kartoza/geoserver:2.13.0
+    ports:
+      - "8600:8080"
+    volumes:
+      - ./geoserver_data:/opt/geoserver/data_dir
+      - ${HOME}:/home/${USER}
+    links:
+      - db:db
   geogig:
     build:
       context: .
       dockerfile: Dockerfile
       args:
         VERSION: 1.2.0
-        BACKEND: FILE
-        APT_CATCHER_IP=127.0.0.0
+        BACKEND: DATABASE
+      # Set $ADDR to your APT_CATCHER_IP where address can be found using
+      # ADDR=`ifconfig wlan1 | grep 'indirizzo inet:' | cut -d: -f2 | awk '{ print $1}'`
+        #APT_CATCHER_IP:$ADDR
     volumes:
-      - ./data:/data
+      - ./data:/geogig_repo/gis
+      - ${HOME}:/home/${USER}
     ports:
       - "38080:8182"
-    environment:
-      - GEOGIG_CACHE_MAX_SIZE:0.5
-      - EMAIL:test@geogig.com
-      - USER_NAME:geogig
-      - PGHOST:db
-      - PGPORT:5432
-      - PGDATABASE:gis
-      - PGUSER:docker
-      - PGPASSWORD:docker
-      - PGSCHEMA:public
+    env_file:
+      - geogig.env
     depends_on:
       - db
