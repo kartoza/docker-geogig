@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   db:
     image: kartoza/postgis:9.5-2.2
@@ -6,7 +6,8 @@ services:
       - "25435:5432"
     env_file:
       - database.env
-
+    healthcheck:
+      test: "exit 0"
   geoserver:
     image: kartoza/geoserver:2.13.0
     ports:
@@ -16,6 +17,7 @@ services:
       - ${HOME}:/home/${USER}
     links:
       - db:db
+
   geogig:
     build:
       context: .
@@ -34,4 +36,9 @@ services:
     env_file:
       - geogig.env
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
+
+
+
