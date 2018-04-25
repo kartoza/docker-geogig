@@ -1,13 +1,14 @@
-I assume you have docker installed already (the build file and example below
-refers to docker instead of docker for commands since that is how it is
-packaged in Ubuntu 16.04). So all instructions below are based on 16.04 as the
+I assume you have docker and docker-composer installed already.So all instructions below are based on 16.04 as the
 host:
 
 Change the username and email address in the bash command to run the container:
 
 ```bash
-docker pull kartoza/geogig
-sudo docker run -e USER='name' -e EMAIL_ADDRESS='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
+docker pull kartoza/geogig:$VER
+# Where Version can be set to dev or latest stable release and also varies based on  the storage backend
+# Run the Postgres database and link it to the geogig image
+docker run --name "db" -p 25434:5432 -d -t kartoza/postgis:9.5-2.2 
+docker run -e USER_NAME='name' -e EMAIL='name@gmail.com' --name="geogig" -p 38080:8182 --link db:db  -d  kartoza/geogig
 ```
 
 
@@ -22,37 +23,34 @@ sudo apt-get install apt-cacher-ng
 git clone git@github.com:kartoza/docker-geogig.git
 cd docker-geogig
 ```
-**VERSION** build arg can be set to `dev` for the lastest
+**VERSION** build arg can be set to `dev` for the developmental branch
 development build or to a specific version, the default
 value is `1.1.1` and it will build geogig-`1.1.1`.
 
+**BACKEND** Can be set to FILE or DATABASE.
+FILE Backend uses the rocks-db storage backend
+DATABASE uses the PostgreSQL backend
+
 **OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
 
-**BDBPLUGIN no longer supported** As of GeoGig release 1.0, the BerkeleyDB backend has been replaced by RocksDB
-(https://github.com/facebook/rocksdb)
-
 ```bash
-# Set $ADDR to your APT_CATCHER_IP
-docker build -t kartoza/geogig --build-arg VERSION=dev --build-arg APT_CATCHER_IP=$ADDR .
-# See ./build.sh for an example run
+docker-compose up -d --build
 ```
+The build assumes that you have a docker-geoserver image that has the geogig extension built with it. For 
+instructions on how to build geoserver with geogig follow the instructions at [kartoza geoserver](https://github.com/kartoza/docker-geoserver)
 
+To build and bring the services up to custom environment variables edit the `.env` files accordingly.
 
-Its going to take a long time (and consume a chunk of bandwidth) for the build
+It's going to take a long time (and consume a chunk of bandwidth) for the build
 because you have any docker base operating system images on your system and the
 maven build grabs a lot of jars.
 
-After it is installed, to run a container substitute your username and email address on the bash command below:
-
-```bash
-sudo docker run -e USER='name' -e EMAIL_ADDRESS='name@gmail.com' --name="geogig" -p 38080:8182  -d  kartoza/geogig
-```
-Then from your local machine you should be able to clone the GeoGigRepo
-repository that is created in the docker container:
+Once the docker services are up a user should be able to clone the remote repository locally using the command:
 
 ```
 geogig clone http://localhost:38080/repos/gis gisdata-repo-clone
 ```
-
+Before cloning the repository make sure that you have geogig installed locally. You can follow the instructions
+from [Geogig Install](http://geogig.org/docs/start/installation.html)
 
 - Tim Sutton, February 2015

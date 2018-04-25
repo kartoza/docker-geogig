@@ -3,12 +3,13 @@
 # Tim Sutton, February 21, 2015
 # Install GeoGig
 #install geogig
+
 if [ ! -f /tmp/resources/geogig-${VERSION}.zip ]
 then
     if [ "${VERSION}" = "dev" ]; then
-        wget http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P /tmp/resources
+        wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-master-latest.zip -P /tmp/resources
     else
-        wget http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P /tmp/resources
+        wget -c http://download.locationtech.org/geogig/geogig-${VERSION}.zip -P /tmp/resources
     fi
 fi
 
@@ -27,47 +28,62 @@ then
     if [ "${OSMPLUGIN}" = "OSM" ]; then
         # make sure the OSM plugin version matches the GeoGig version
         if [ "${VERSION}" = "dev" ]; then
-            wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip
-            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-master-latest.zip
+            wget -c http://build-slave-01.geoserver.org/geogig/master/geogig-plugins-osm-master-latest.zip -P /tmp/resources
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} -P /tmp/resources/geogig-plugins-osm-master-latest.zip
             rm geogig-plugins-osm-master-latest.zip
         else
-            wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip
-            unzip -j -d ${GEOGIG_PLUGIN_DIR} geogig-plugins-osm-${VERSION}.zip
+            wget https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip -P /tmp/resources
+            unzip -j -d ${GEOGIG_PLUGIN_DIR} -P /tmp/resources/geogig-plugins-osm-${VERSION}.zip
             rm geogig-plugins-osm-${VERSION}.zip
         fi
     fi
 fi
 
-# Setup geogig service
 mkdir -p  /etc/service
+export PATH=/geogig/bin:$PATH
+GEOGIG_PATH=/geogig/bin
+echo "export PATH=${GEOGIG_PATH}:$PATH" >>/root/.bashrc
+
+# Setup username and geogig configs
+if [ -z "${USER}" ]; then
+	USER=${USER_NAME}
+fi
+
+if [ -z "${EMAIL_ADDRESS}" ]; then
+	EMAIL_ADDRESS=${EMAIL}
+fi
+
+if [ "${BACKEND}" = "FILE" ]; then
+    FILE_PATH=/geogig_repo/gis
+    if [ ! -d /geogig_repo/gis ]
+    then
+        mkdir -p /geogig_repo/gis
+        cd /geogig_repo/gis
+        /geogig/bin/geogig init
+    fi
+else
+    FILE_PATH="postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}/${PGSCHEMA}/?user=${PGUSER}&password=${PGPASSWORD}"
+fi
+
+# Setup geogig service
 mkdir -p  /etc/service/geogig_serve
 cd /etc/service/geogig_serve
 echo "#!/bin/bash
 # Serve all repos under the specified folder
-exec /geogig/bin/geogig serve -m /geogig_repo" > run
+
+exec /geogig/bin/geogig serve -m '${FILE_PATH}' " > run
 chmod 0755 run
 
-GEOGIG_PATH=/geogig/bin
-echo "export PATH=${GEOGIG_PATH}:$PATH" >>/root/.bashrc
 
-# Make an empty repo
-export PATH=/geogig/bin:$PATH
-cd /
-if [ ! -d /geogig_repo/gis ]
-then
-    mkdir -p geogig_repo/gis
-fi
 
-cd geogig_repo/gis
-/geogig/bin/geogig init
 
-if [ -z "${USER}" ]; then
-	USER=geogig
-fi
 
-if [ -z "${EMAIL_ADDRESS}" ]; then
-	EMAIL_ADDRESS=geogig@docker.com
-fi
 
-geogig config --global user.name "${USER}"
-geogig config --global user.email "${EMAIL_ADDRESS}"
+
+
+
+
+
+
+
+
