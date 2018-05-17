@@ -8,6 +8,7 @@ services:
       - database.env
     healthcheck:
       test: "exit 0"
+
   geoserver:
     image: kartoza/geoserver:2.13.0
     ports:

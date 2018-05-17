@@ -2,7 +2,7 @@ FROM tomcat:8.0-jre8
 MAINTAINER Admire Nyakudya<admire@kartoza.com>
 
 
-ARG APT_CATCHER_IP=localhost
+#ARG APT_CATCHER_IP=localhost
 
 # Use apt-catcher-ng caching
 # Use local cached debs from host to save your bandwidth and speed thing up.
