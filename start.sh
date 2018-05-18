@@ -1,12 +1,11 @@
 #!/bin/bash
 
 # Serve the correct repo from the correct database
-
 if grep -rl -q "db" /etc/service/geogig_serve/run
 
 then
     echo "Use the correct PG Host that is defined by the env variable"
-    sed -i "s/db/$PGHOST/g" /etc/service/geogig_serve/run
+    sed -i "s/db:/$PGHOST:/g" /etc/service/geogig_serve/run
 else
     echo "The PG Host has not changed"
 
