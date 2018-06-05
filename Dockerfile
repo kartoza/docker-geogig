@@ -12,7 +12,7 @@ MAINTAINER Admire Nyakudya<admire@kartoza.com>
 # if you do not want to use caching
 #RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
 
-ARG VERSION="1.1.1"
+ARG VERSION="1.2.0"
 ARG BACKEND="DATABASE"
 
 # leave empty to use default plugins or set to "OSM" to install also OSM dev plugin
