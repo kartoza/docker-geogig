@@ -37,7 +37,7 @@ RUN apt-get -y update
 
 RUN apt-get -y install default-jdk  daemontools postgresql
 
-ADD resources /tmp/resources
+RUN mkdir -p /tmp/resources
 
 
 ADD setup.sh /setup.sh
