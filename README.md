@@ -4,50 +4,46 @@ host:
 Change the username and email address in the bash command to run the container:
 
 ```bash
-docker pull kartoza/geogig:$VER
-# Where Version can be set to dev or latest stable release and also varies based on  the storage backend
-# Run the Postgres database and link it to the geogig image
-docker run --name "db" -p 25434:5432 -d -t kartoza/postgis:9.5-2.2 
-docker run -e USER_NAME='name' -e EMAIL='name@gmail.com' --name="geogig" -p 38080:8182 --link db:db  -d  kartoza/geogig
+GEOGIG_VERSION_TAG=1.2.0
+docker pull kartoza/geogig:${GEOGIG_VERSION_TAG}
+docker run --name "db" -p 25434:5432 -d -t kartoza/postgis:${POSTGIS_VERSION_TAG}
+docker run -e USER_NAME='name' -e EMAIL='name@gmail.com' --name="geogig" -p 38080:8182 --link db:db  -d  kartoza/geogig:${GEOGIG_VERSION_TAG}
 ```
-
 
 If you want to build the image yourself using the Docker recipe then do the following:
-
-
-```bash
-sudo apt-get install apt-cacher-ng
-```
 
 ```bash
 git clone git@github.com:kartoza/docker-geogig.git
 cd docker-geogig
+docker-compose -f docker-compose-build.yml up -d --build
 ```
-**VERSION** build arg can be set to `dev` for the developmental branch
-development build or to a specific version, the default
-value is `1.1.1` and it will build geogig-`1.1.1`.
 
-**BACKEND** Can be set to FILE or DATABASE.
-FILE Backend uses the rocks-db storage backend
-DATABASE uses the PostgreSQL backend
+## Environment variables
+A full list of environment variables is available from the env file.
 
-**OSMPLUGIN** build arg to be set to OSM to install OSM dev geogig plugin
+**VERSION** build arg can be set to the version number i.e 1.2.1.
+
+**BACKEND** Can be set to FILE or DATABASE. FILE Backend uses the `rocks-db` storage backend 
+DATABASE uses the `PostgreSQL` backend
+
+**OSMPLUGIN** build arg to be set to OSM to install OSM geogig plugin
+
+## Running docker-compose
 
 ```bash
 docker-compose up -d --build
 ```
-The build assumes that you have a docker-geoserver image that has the geogig extension built with it. For 
-instructions on how to build geoserver with geogig follow the instructions at [kartoza geoserver](https://github.com/kartoza/docker-geoserver)
+The docker-compose connects to an old version of GeoServer running the geogig extension.
 
-To build and bring the services up to custom environment variables edit the `.env` files accordingly.
+**Note** The GeoServer geogig extension is no longer being maintained and users wanting a newer version would have
+to build the extension themselves using the instructions from [GeoServer Integration](http://geogig.org/docs/interaction/geoserver_ui.html)
+ld assumes that you have a docker-geoserver image that has the geogig extension built with it. 
 
-It's going to take a long time (and consume a chunk of bandwidth) for the build
-because you have any docker base operating system images on your system and the
-maven build grabs a lot of jars.
+Once the docker services are up a user should be able to import, add and commit data in an intialized repository:
 
-Once the docker services are up a user should be able to clone the remote repository locally using the command:
+To clone a populated repository run the following
 
-```
+```bash
 geogig clone http://localhost:38080/repos/gis gisdata-repo-clone
 ```
 Before cloning the repository make sure that you have geogig installed locally. You can follow the instructions

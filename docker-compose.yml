@@ -1,7 +1,12 @@
 version: '2.1'
+volumes:
+  postgres_data:
+
 services:
   db:
-    image: kartoza/postgis:9.5-2.2
+    image: kartoza/postgis:13-3.1
+    volumes:
+      - postgres_data:/var/lib/postgresql
     ports:
       - "25435:5432"
     env_file:
@@ -16,28 +21,26 @@ services:
     volumes:
       - ./geoserver_data:/opt/geoserver/data_dir
       - ${HOME}:/home/${USER}
-    links:
-      - db:db
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: "exit 0"
 
   geogig:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      args:
-        VERSION: 1.2.0
-        BACKEND: DATABASE
-      # Set $ADDR to your APT_CATCHER_IP where address can be found using
-      # ADDR=`ifconfig wlan1 | grep 'indirizzo inet:' | cut -d: -f2 | awk '{ print $1}'`
-        #APT_CATCHER_IP:$ADDR
+    image: kartoza/geogig:1.2.1
     volumes:
-      - ./data:/geogig_repo/gis
+      - ./geogig_repo:/geogig_repo/gis
       - ${HOME}:/home/${USER}
+      - ./geoserver_data:/opt/geoserver/data_dir
     ports:
       - "38080:8182"
     env_file:
       - geogig.env
     depends_on:
       db:
+        condition: service_healthy
+      geoserver:
         condition: service_healthy
 
 

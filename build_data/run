@@ -1,0 +1,4 @@
+#!/bin/bash
+# Serve all repos under the specified folder
+
+exec /geogig/bin/geogig serve -m '${FILE_PATH}' 

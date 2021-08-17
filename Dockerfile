@@ -1,51 +1,46 @@
-FROM tomcat:8.0-jre8
+ARG IMAGE_VERSION=8.0-jre8
+ARG JAVA_HOME=/docker-java-home/jre
+FROM tomcat:$IMAGE_VERSION
 MAINTAINER Admire Nyakudya<admire@kartoza.com>
 
-
-#ARG APT_CATCHER_IP=localhost
-
-# Use apt-catcher-ng caching
-# Use local cached debs from host to save your bandwidth and speed thing up.
-# APT_CATCHER_IP can be changed passing an argument to the build script:
-# --build-arg APT_CATCHER_IP=xxx.xxx.xxx.xxx,
-# set the IP to that of your apt-cacher-ng host or comment this line out
-# if you do not want to use caching
-#RUN  echo 'Acquire::http { Proxy "http://'${APT_CATCHER_IP}':3142"; };' >> /etc/apt/apt.conf.d/01proxy
-
-ARG VERSION="1.2.0"
-ARG BACKEND="DATABASE"
-
-# leave empty to use default plugins or set to "OSM" to install also OSM dev plugin
-ARG OSMPLUGIN=""
+ARG VERSION=1.2.1
+ARG OSMPLUGIN=
+ARG GEOGIG_URL=https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-cli-app-${VERSION}.zip
+ARG PLUGIN_URL=https://github.com/locationtech/geogig/releases/download/v${VERSION}/geogig-plugins-osm-${VERSION}.zip
 
 #-------------Application Specific Stuff ----------------------------------------------------
-ENV GEOGIG_OPTS "-Djava.awt.headless=true -server -Xms2G -Xmx4G  "
-#-XX:+UseConcMarkSweepGC use this rather than parallel GC?
-ENV JAVA_OPTS "$JAVA_OPTS $GEOGIG_OPTS"
 
-ENV GEOGIG_CACHE_MAX_SIZE 0.5
-ENV EMAIL geogig@docker.com
-ENV USER_NAME  geogig
-ENV STORAGE_BACKEND ${BACKEND}
-ENV PGHOST db
-ENV PGPORT 5432
-ENV PGDATABASE gis
-ENV PGUSER docker
-ENV PGPASSWORD docker
-ENV PGSCHEMA public
-RUN apt-get -y update
+ENV \
+	GEOGIG_CACHE_MAX_SIZE=0.5 \
+	EMAIL=geogig@docker.com \
+	USER_NAME=geogig \
+	STORAGE_BACKEND=DATABASE \
+	PGHOST=db \
+	PGPORT=5432 \
+	PGDATABASE=gis \
+	PGUSER=docker \
+	PGPASSWORD=docker \
+	PGSCHEMA=public \
+	GEOGIG_PATH=/geogig/bin \
+    PATH="$PATH:${GEOGIG_PATH}" \
+	LOCAL_REPO='/geogig_repo/gis' \
+	EXTRA_CONFIG_DIR=/settings \
+	GEOGIG_PLUGIN_DIR=/geogig/libexec \
+	INITIAL_MEMORY="2G" \
+	MAXIMUM_MEMORY="4G"
 
-RUN apt-get -y install default-jdk  daemontools postgresql
+WORKDIR /scripts
 
-RUN mkdir -p /tmp/resources
+RUN apt-get -y update;apt-get -y install default-jdk wget unzip gettext daemontools postgresql-client
 
+ADD scripts /scripts
+ADD build_data /build_data
+ADD resources /tmp/resources
 
-ADD setup.sh /setup.sh
-RUN chmod 0755 /setup.sh
-RUN /setup.sh
+RUN chmod +x /scripts/*.sh;/scripts/setup.sh \
+    && apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 EXPOSE 8182
-ADD start.sh /start.sh
-RUN chmod 0755 /start.sh
 
-CMD ["/start.sh"]
+CMD ["/bin/bash", "/scripts/start.sh"]
