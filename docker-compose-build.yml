@@ -13,7 +13,7 @@ services:
           VERSION: ${GEOGIG_VERSION_TAG}
           JAVA_HOME: ${JAVA_HOME}
           GEOGIG_URL: ${GEOGIG_URL}
-          IMAGE_VERSION: ${IMAGE_VERSION}
+          IMAGE_VERSION: ${GEOGIG_VERSION}
       volumes:
         - geogig_repo:/geogig_repo/gis
       ports:
